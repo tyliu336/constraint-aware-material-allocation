@@ -26,7 +26,7 @@ LLM 只把自然语言转换成受支持的排序偏好，不负责修改尺寸�
 $secureKey = Read-Host 'OpenAI API key' -AsSecureString
 $keyPtr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureKey)
 $env:MAC_OPENAI_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($keyPtr)
-$env:MAC_REQUIREMENT_MODEL = '<你的账号可用的模型 ID>'
+$env:MAC_REQUIREMENT_MODEL = '<模型 ID>'
 .\scripts\start-demo.ps1
 ```
 
