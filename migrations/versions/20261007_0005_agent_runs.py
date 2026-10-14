@@ -88,7 +88,6 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(["run_id"], ["agent_runs.run_id"], ondelete="RESTRICT"),
         sa.PrimaryKeyConstraint("approval_request_id"),
-        sa.UniqueConstraint("run_id"),
     )
     op.create_index(
         op.f("ix_agent_approval_requests_run_id"),
