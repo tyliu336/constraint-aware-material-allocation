@@ -83,7 +83,7 @@ migrations/         Alembic 数据库迁移
 scripts/            安装、启动和验证脚本
 ```
 
-技术栈包括 Python、FastAPI、Pydantic、SQLAlchemy、Alembic、PostgreSQL、OpenAI Responses API、MCP Python SDK、原生 HTML/CSS/JavaScript、Pytest、Docker Compose 和 GitHub Actions。
+技术栈包括 Python、FastAPI、Pydantic、SQLAlchemy、Alembic、PostgreSQL、OpenAI Responses API、MCP Python SDK、Pytest、Docker Compose 和 GitHub Actions。
 
 ## 数据与证据边界
 
