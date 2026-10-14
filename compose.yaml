@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: material_allocation
+      POSTGRES_USER: material_allocation
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U material_allocation -d material_allocation"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MAC_ENVIRONMENT: pilot
+      MAC_LOG_LEVEL: INFO
+      MAC_STRICT_RULE_MODE: "true"
+      MAC_DB_HOST: postgres
+      MAC_DB_NAME: material_allocation
+      MAC_DB_USER: material_allocation
+      MAC_DB_PASSWORD_FILE: /run/secrets/postgres_password
+      MAC_API_PRINCIPALS_FILE: /run/secrets/api_principals
+    secrets:
+      - postgres_password
+      - api_principals
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  postgres-data:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  api_principals:
+    file: ./secrets/api_principals.json

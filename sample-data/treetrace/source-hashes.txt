@@ -1,0 +1,5 @@
+# TreeTrace_Douglas V1 source and deterministic derivative
+# SHA-256 values are lowercase hexadecimal.
+6e8050e7bf8310136448c39f56c800fc7ddebd21199d8d421f8fd964da2c9121  .local-data/TreeTrace/tables/boards.txt
+b29e90a4d2b797203581a22dfcd0f55aa9928f2cdf9a1a26d58bc99ca21b9f8b  sample-data/treetrace/treetrace-boards-demo.csv
+9c7b02f29b1a931bb7562afc872051e815be8f838282884c1c41303bde5773d4  sample-data/treetrace/treetrace-boards-simple.csv

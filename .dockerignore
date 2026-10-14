@@ -1,0 +1,11 @@
+.git
+.github
+.venv*
+.local-data
+.pytest*
+.ruff_cache
+outputs
+*.db
+*.sqlite3
+.env
+secrets

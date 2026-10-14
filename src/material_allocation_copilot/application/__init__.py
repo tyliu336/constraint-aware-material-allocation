@@ -1,0 +1,83 @@
+"""Application use cases and persistence ports."""
+
+from material_allocation_copilot.application.contracts import (
+    AllocationPlanInput,
+    ApprovalDecision,
+    ApprovalInput,
+    ClarificationAnswer,
+    ConfirmedRequirementInput,
+    ConfirmedSoftPreference,
+    DraftConfirmationSlot,
+    InventoryImportInput,
+    PlanTerminalStatus,
+    PreferenceInterpretationInput,
+    RequirementDraftClarifyInput,
+    RequirementDraftConfirmInput,
+    RequirementDraftCreateInput,
+    ReservationCreateInput,
+    ReservationReleaseInput,
+    ReservationStatus,
+    RuleEvaluationInput,
+    TaskCancelInput,
+    TaskRetryInput,
+    TaskStatus,
+)
+from material_allocation_copilot.application.preference_interpretation import (
+    PreferenceInterpretationService,
+)
+from material_allocation_copilot.application.semantic_requirements import (
+    RequirementDraftService,
+    StructuredRequirementModel,
+)
+from material_allocation_copilot.application.services import (
+    AllocationService,
+    ApprovalService,
+    InventoryService,
+    ProjectService,
+    RequirementService,
+    ReservationService,
+    TaskService,
+)
+from material_allocation_copilot.application.tooling import (
+    ToolExecutionResult,
+    ToolExecutor,
+    ToolRegistry,
+    default_tool_registry,
+)
+
+__all__ = [
+    "AllocationPlanInput",
+    "AllocationService",
+    "ApprovalDecision",
+    "ApprovalInput",
+    "ApprovalService",
+    "ClarificationAnswer",
+    "ConfirmedRequirementInput",
+    "ConfirmedSoftPreference",
+    "DraftConfirmationSlot",
+    "InventoryImportInput",
+    "InventoryService",
+    "PlanTerminalStatus",
+    "PreferenceInterpretationInput",
+    "PreferenceInterpretationService",
+    "ProjectService",
+    "RequirementDraftClarifyInput",
+    "RequirementDraftConfirmInput",
+    "RequirementDraftCreateInput",
+    "RequirementDraftService",
+    "RequirementService",
+    "ReservationService",
+    "ReservationCreateInput",
+    "ReservationReleaseInput",
+    "ReservationStatus",
+    "RuleEvaluationInput",
+    "TaskService",
+    "TaskCancelInput",
+    "TaskRetryInput",
+    "TaskStatus",
+    "ToolExecutionResult",
+    "ToolExecutor",
+    "ToolRegistry",
+    "StructuredRequirementModel",
+    "default_tool_registry",
+]

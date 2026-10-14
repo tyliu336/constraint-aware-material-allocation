@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "material-allocation-copilot"
+version = "1.4.0"
+description = "Constraint-aware material allocation with deterministic rules and auditable AI assistance."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "alembic>=1.19,<2",
+  "fastapi>=0.136,<0.137",
+  "mcp>=2.2,<3",
+  "openai>=3.11,<4",
+  "pydantic>=2.12,<3",
+  "sqlalchemy>=2.0.51,<2.1",
+  "uvicorn>=0.49,<0.50",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<0.29",
+  "pytest>=9,<10",
+  "ruff>=0.13,<0.14",
+]
+pilot = [
+  "psycopg[binary]>=3.2,<4",
+]
+
+[project.scripts]
+material-allocation-mcp = "material_allocation_copilot.mcp_server.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+material_allocation_copilot = ["evals/*.jsonl", "web/*.html", "web/*.css", "web/*.js"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

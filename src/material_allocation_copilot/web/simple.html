@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="用材料清单、三维点阵和一句话偏好完成木构材料预匹配。">
+    <title>木构配料助手</title>
+    <link rel="stylesheet" href="/simple/assets/simple.css">
+    <script type="module" src="/simple/assets/simple.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="木构配料助手首页">
+        <span class="brand-mark" aria-hidden="true">木</span>
+        <span><strong>木构配料助手</strong><small>Material Allocation Copilot</small></span>
+      </a>
+      <div class="header-actions">
+        <span id="connection-state" class="connection-state" data-tone="warning">尚未连接</span>
+        <button id="open-connection" class="button secondary small" type="button">本地连接</button>
+      </div>
+    </header>
+
+    <main id="main-content" class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">简单木构配料</p>
+        <h1 id="page-title">从材料到方案，只需三步</h1>
+        <p>录入木料，描述结构，再输入你的配料要求。</p>
+      </section>
+
+      <nav class="stepper" aria-label="使用进度">
+        <button class="step-button active" type="button" data-step-target="1" aria-current="step">
+          <span>1</span><strong>木料录入</strong><small id="step-1-status">等待导入</small>
+        </button>
+        <span class="step-line" aria-hidden="true"></span>
+        <button class="step-button" type="button" data-step-target="2" disabled>
+          <span>2</span><strong>描述结构</strong><small id="step-2-status">尚未开始</small>
+        </button>
+        <span class="step-line" aria-hidden="true"></span>
+        <button class="step-button" type="button" data-step-target="3" disabled>
+          <span>3</span><strong>提示词输入</strong><small id="step-3-status">等待结构</small>
+        </button>
+      </nav>
+
+      <div id="live-region" class="live-region" role="status" aria-live="polite">请先连接本地服务，然后导入材料。</div>
+
+      <section id="step-1" class="workflow-step" aria-labelledby="step-1-title">
+        <div class="section-heading">
+          <div><p class="step-kicker">STEP 01</p><h2 id="step-1-title">木料录入</h2></div>
+          <p>上传 CSV、JSON，或使用演示数据。</p>
+        </div>
+        <div class="upload-layout">
+          <div id="drop-zone" class="drop-zone">
+            <input id="material-file" type="file" accept=".csv,.json,text/csv,application/json">
+            <div class="upload-icon" aria-hidden="true">↑</div>
+            <h3>拖入材料清单</h3>
+            <p>CSV 至少包含：material_id、length_mm、section_width_mm、section_height_mm</p>
+            <label class="button primary" for="material-file">选择文件</label>
+            <span class="or">或</span>
+            <button id="load-demo-materials" class="button text-button" type="button">使用 8 根合成演示木料</button>
+          </div>
+          <aside class="format-card">
+            <p class="card-label">最简 CSV 格式</p>
+            <pre>material_id,length_mm,section_width_mm,section_height_mm,species
+M-01,3200,45,95,SPF
+M-02,2800,45,95,SPF</pre>
+          </aside>
+        </div>
+        <div id="material-summary" class="summary-panel" hidden>
+          <div><span>已导入</span><strong id="material-count">0 根</strong></div>
+          <div><span>长度范围</span><strong id="material-length-range">—</strong></div>
+          <div><span>截面种类</span><strong id="material-section-count">—</strong></div>
+          <div><span>结构评估</span><strong id="material-evidence">—</strong></div>
+        </div>
+        <div class="step-actions"><span></span><button id="to-step-2" class="button primary forward" type="button" disabled>下一步：画结构 <span aria-hidden="true">→</span></button></div>
+      </section>
+
+      <section id="step-2" class="workflow-step" aria-labelledby="step-2-title" hidden>
+        <div class="section-heading">
+          <div><p class="step-kicker">STEP 02</p><h2 id="step-2-title">描述结构</h2></div>
+          <p>依次点击两个点创建一根构件；拖动画布旋转，滚轮缩放。</p>
+        </div>
+        <div class="builder-layout">
+          <div class="canvas-card">
+            <div class="canvas-toolbar">
+              <div class="tool-group" role="group" aria-label="点阵尺寸">
+                <label>X <select id="grid-x"><option>3</option><option selected>4</option><option>5</option></select></label>
+                <label>Y <select id="grid-y"><option>2</option><option selected>3</option><option>4</option></select></label>
+                <label>Z <select id="grid-z"><option selected>2</option><option>3</option><option>4</option></select></label>
+                <label>间距 <select id="grid-spacing"><option value="600">600 mm</option><option value="900">900 mm</option><option value="1000" selected>1000 mm</option><option value="1200">1200 mm</option></select></label>
+              </div>
+              <div class="tool-group">
+                <button id="reset-view" class="icon-button" type="button">复位视角</button>
+                <button id="undo-member" class="icon-button" type="button" disabled>撤销</button>
+              </div>
+            </div>
+            <div class="canvas-stage">
+              <canvas id="structure-canvas" width="960" height="620" aria-label="可交互的三维点阵木构编辑器"></canvas>
+              <div id="point-controls" class="point-controls" aria-label="点阵节点"></div>
+            </div>
+            <div class="canvas-hint"><span id="canvas-mode">请选择第一个点</span><span><i class="legend-dot"></i> 可连接点　<i class="legend-line"></i> 已建构件</span></div>
+          </div>
+          <aside class="member-panel">
+            <div class="member-panel-header"><div><p class="card-label">构件清单</p><h3><span id="member-count">0</span> 根构件</h3></div><button id="clear-members" class="button text-button danger" type="button" disabled>清空</button></div>
+            <div class="defaults-form">
+              <label>新构件截面宽度 <span><input id="default-width" type="number" min="1" max="1000" value="45"> mm</span></label>
+              <label>新构件截面高度 <span><input id="default-height" type="number" min="1" max="1000" value="95"> mm</span></label>
+              <label>最低强度等级 <select id="minimum-grade"><option>C16</option><option>C18</option><option>C24</option><option>C30</option></select></label>
+            </div>
+            <ol id="member-list" class="member-list"><li class="empty-row">点击画布中的两个点，创建第一根构件。</li></ol>
+          </aside>
+        </div>
+        <div class="step-actions"><button class="button secondary back" type="button" data-back="1">← 返回木料</button><button id="to-step-3" class="button primary forward" type="button" disabled>下一步：输入提示词 <span aria-hidden="true">→</span></button></div>
+      </section>
+
+      <section id="step-3" class="workflow-step" aria-labelledby="step-3-title" hidden>
+        <div class="section-heading">
+          <div><p class="step-kicker">STEP 03</p><h2 id="step-3-title">提示词输入</h2></div>
+          <p>模型会把你的描述转换成方案排序偏好。</p>
+        </div>
+        <div class="prompt-card">
+          <label for="preference-prompt">你希望系统怎样选择木料？</label>
+          <textarea id="preference-prompt" rows="5" required placeholder="例如：优先减少切割余料，同时尽量保留稀缺长料。"></textarea>
+          <div class="prompt-examples" aria-label="提示词示例">
+            <span>示例：</span>
+            <button type="button" data-prompt="尽量省料，减少切割余料。">尽量省料</button>
+            <button type="button" data-prompt="优先保护稀缺长料，同时兼顾少浪费。">保护长料</button>
+            <button type="button" data-prompt="优先选择证据完整的材料。">证据优先</button>
+            <button type="button" data-prompt="优先选择已记录节疤更少、尺寸更小的木料。">减少表面节疤</button>
+          </div>
+          <div id="model-interpretation" class="model-interpretation" hidden></div>
+        </div>
+        <div class="run-summary"><span><strong id="run-material-count">0</strong> 根材料</span><span><strong id="run-member-count">0</strong> 根构件</span><span>最多返回 <strong>3</strong> 个方案</span></div>
+        <div class="step-actions"><button class="button secondary back" type="button" data-back="2">← 返回结构</button><button id="run-allocation" class="button primary run-button" type="button">生成配料方案 <span aria-hidden="true">↗</span></button></div>
+      </section>
+
+      <section id="result-section" class="result-section" aria-labelledby="result-title" hidden>
+        <div class="result-heading"><div><p class="step-kicker">RESULT</p><h2 id="result-title">配料建议</h2></div><span id="result-status" class="result-status">—</span></div>
+        <div id="result-summary" class="result-summary"></div>
+        <div id="plan-list" class="plan-list"></div>
+        <div class="result-actions"><button id="edit-and-rerun" class="button secondary" type="button">修改提示词</button></div>
+      </section>
+    </main>
+
+    <dialog id="connection-dialog" class="connection-dialog">
+      <form method="dialog" id="connection-form">
+        <div class="dialog-heading"><div><p class="card-label">本地服务连接</p><h2>输入本次运行凭据</h2></div><button class="dialog-close" value="cancel" aria-label="关闭">×</button></div>
+        <p>运行 <code>.\scripts\start-demo.ps1</code> 后，从终端复制 Token。</p>
+        <label for="bearer-token-simple">Bearer Token</label>
+        <input id="bearer-token-simple" type="password" autocomplete="off" spellcheck="false" required>
+        <label for="project-scope">授权项目范围</label>
+        <input id="project-scope" type="text" value="PRJ-demo" pattern="[A-Za-z0-9][A-Za-z0-9._-]{0,127}" required>
+        <div class="dialog-actions"><button id="clear-connection" class="button text-button danger" type="button">清除凭据</button><button id="connect-service" class="button primary" type="submit">连接并继续</button></div>
+      </form>
+    </dialog>
+  </body>
+</html>
