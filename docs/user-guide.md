@@ -121,15 +121,3 @@ TreeTrace 示例数据没有完整的结构评估。上传后出现“缺少结�
 5. 让系统重新执行规则和匹配。
 
 具体字段见 [数据与证据](data-and-evidence.md)。不要为了让页面变绿而编造评估人员、报告编号或缺陷结论。
-
-## 8. 停止与清理
-
-在运行服务的终端按 `Ctrl+C`，然后执行：
-
-```powershell
-Remove-Item Env:MAC_OPENAI_API_KEY -ErrorAction SilentlyContinue
-Remove-Item Env:MAC_REQUIREMENT_MODEL -ErrorAction SilentlyContinue
-[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($keyPtr)
-```
-
-本地 SQLite 数据库属于运行数据，不应提交到 Git。

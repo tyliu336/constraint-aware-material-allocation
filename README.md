@@ -11,10 +11,10 @@ LLM 只把自然语言转换成受支持的排序偏好，不负责修改尺寸�
 主页只有三个步骤：
 
 1. 上传木料 CSV，或载入内置演示材料；
-2. 在三维点阵中连接节点，描述木构框架；
+2. 在三维点阵中连接节点，描述简单木构框架；
 3. 输入偏好，例如“优先减少余料”或“尽量选择表面节疤较少的材料”。
 
-服务端调用配置的 OpenAI 模型，把第三步的文字转换为结构化权重。随后，规则引擎和匹配算法会生成最多三个方案，并显示构件、分配材料、长度余量和排序得分。
+服务端调用配置的模型，把第三步的文字转换为结构化权重。随后，规则引擎和匹配算法会生成最多三个方案，并显示构件、分配材料、长度余量和排序得分。
 
 ![三步向导界面](docs/images/workflow-placeholder.svg)
 
@@ -34,7 +34,7 @@ $env:MAC_REQUIREMENT_MODEL = '<你的账号可用的模型 ID>'
 终端会显示本地地址和一次性 Bearer token：
 
 1. 打开 `http://127.0.0.1:8000/`；
-2. 在“本地连接”中粘贴 token；
+2. 在“本地连接”中粘贴 Bearer token；
 3. 上传 [`sample-data/treetrace/treetrace-boards-demo.csv`](sample-data/treetrace/treetrace-boards-demo.csv)；
 4. 连接点阵中的节点；
 5. 输入偏好并生成方案。
@@ -49,32 +49,6 @@ Remove-Item Env:MAC_REQUIREMENT_MODEL -ErrorAction SilentlyContinue
 
 完整操作见 [使用说明](docs/user-guide.md)。
 
-## 系统怎样做出结果
-
-### 三态规则
-
-规则不是简单的 true/false，而是：
-
-- `pass`：现有记录能够证明符合要求；
-- `fail`：现有记录能够证明不符合要求；
-- `not_evaluable`：缺少足够记录，不能判断。
-
-缺少结构评估或缺陷记录不会被自动当成合格。系统可以把这种材料放入待复核候选，但不会把它描述成已经验证通过。
-
-### 完整匹配
-
-系统构建“材料—构件”候选图，并使用精确最大匹配检查是否能够同时覆盖所有构件。一根材料不能分配给两个构件。没有完整方案时，接口会返回未匹配构件和冲突证据。
-
-### 软偏好
-
-当前支持：
-
-- 减少切割余料；
-- 保留稀缺长料；
-- 少用记录不完整的材料；
-- 减少已记录的表面节疤。
-
-软偏好只改变合法候选的顺序，不能覆盖硬条件。
 
 ## 结构
 
@@ -145,7 +119,6 @@ GitHub Actions 会在推送和 Pull Request 时运行代码检查、自动化测
 - [系统架构](docs/architecture.md)
 - [数据与证据](docs/data-and-evidence.md)
 - [产品边界](docs/product-boundaries.md)
-- [验证方法](docs/verification.md)
 - [文件目录](docs/file-index.md)
 - [确定性裁决权](docs/adr/0001-deterministic-authority-under-agent-collaboration.md)
 

@@ -1,19 +1,16 @@
 # TreeTrace 简化测试数据
 
-本目录提供两个从 TreeTrace_Douglas V1 `boards.txt` 生成的产品兼容派生文件。它们保留 Douglas fir 板材的标识、长度、截面尺寸，以及整板宽面/窄面的节疤类型和尺寸，可直接上传到本项目根路径的三步向导。
+本目录提供一个从 TreeTrace_Douglas V1 `boards.txt` 生成的产品兼容派生文件。它保留 Douglas fir 板材的标识、长度、截面尺寸，以及整板宽面/窄面的节疤类型和尺寸，可直接上传到本项目根路径的三步向导。
 
 | 文件 | 记录数 | 用途 |
 |---|---:|---|
 | `treetrace-boards-demo.csv` | 80 | 推荐给 GitHub 访问者；可以在最多 30 个构件时保持候选组合不超过 2,500 条试点排序上限 |
-| `treetrace-boards-simple.csv` | 346 | 完整板材几何派生集；用于全量导入、字段和来源验证，较多构件同时排序时可能触发有界计算保护 |
 
 ## 直接使用
 
 1. 启动项目并打开 `http://127.0.0.1:8000/`。
 2. 在“上传材料”区域选择 `treetrace-boards-demo.csv`。
 3. 页面应显示 80 根材料，不再出现 `length_mm 必须是正数`，并可继续生成常规演示结构的方案。
-
-如果要确认全部数据均可导入，再单独上传 `treetrace-boards-simple.csv`。Top-K 排序受 30 个构件和 2,500 条候选边的试点预算保护；例如 346 根材料与 20 个构件会形成 6,760 条可排序候选边，因此后端会明确拒绝无界扩张，而不是静默截断材料。
 
 CSV 字段如下，所有尺寸单位均为毫米：
 
@@ -52,9 +49,6 @@ material_id,length_mm,section_width_mm,section_height_mm,species,knotTypeWideFac
 ```powershell
 .\scripts\fetch-treetrace-tables.ps1
 .\.venv\Scripts\python.exe .\scripts\build-treetrace-sample.py
-.\.venv\Scripts\python.exe .\scripts\build-treetrace-sample.py `
-  --limit 80 `
-  --output .\sample-data\treetrace\treetrace-boards-demo.csv
 ```
 
-生成脚本只接受已审计的 TreeTrace V1 `boards.txt` SHA-256，并检查 346 条记录、唯一 ID 和全部正尺寸。固定哈希见 `source-hashes.txt`。
+生成脚本只接受已审计的 TreeTrace V1 `boards.txt` SHA-256，检查全部 346 条来源记录、唯一 ID 和正尺寸，然后默认输出前 80 条公开演示数据。固定哈希见 `source-hashes.txt`。

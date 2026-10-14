@@ -11,7 +11,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = PROJECT_ROOT / ".local-data" / "TreeTrace" / "tables" / "boards.txt"
-DEFAULT_OUTPUT = PROJECT_ROOT / "sample-data" / "treetrace" / "treetrace-boards-simple.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "sample-data" / "treetrace" / "treetrace-boards-demo.csv"
 
 SOURCE_SHA256 = "6e8050e7bf8310136448c39f56c800fc7ddebd21199d8d421f8fd964da2c9121"
 EXPECTED_ROW_COUNT = 346
@@ -123,8 +123,8 @@ def main() -> None:
     parser.add_argument(
         "--limit",
         type=int,
-        default=None,
-        help="Optionally keep the first N source records for a bounded demo fixture.",
+        default=80,
+        help="Keep the first N source records; defaults to the 80-record public demo.",
     )
     args = parser.parse_args()
 

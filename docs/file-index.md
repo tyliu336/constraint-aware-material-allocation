@@ -58,16 +58,5 @@
 | `docs/architecture.md` | 系统分层、数据流和权限边界 |
 | `docs/data-and-evidence.md` | 材料字段、结构评估和缺陷记录 |
 | `docs/product-boundaries.md` | 系统能力和明确非目标 |
-| `docs/verification.md` | 测试、离线评测和部署验证方法 |
 | `docs/adr/` | 关键架构决策 |
 | `docs/images/` | README 使用的公开图片 |
-
-## 不属于仓库的内容
-
-以下内容由运行或开发环境产生，不进入 Git：
-
-- `.venv/`、`__pycache__/`、`.pytest_cache/`、`.ruff_cache/`；
-- `.local-data/` 中下载的原始数据；
-- SQLite/PostgreSQL 数据、备份和运行输出；
-- `.env`、API key、Bearer token 和部署 secret；
-- 本地编辑器设置和聊天记录。
